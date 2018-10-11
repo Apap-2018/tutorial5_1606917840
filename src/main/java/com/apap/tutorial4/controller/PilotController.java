@@ -18,24 +18,28 @@ public class PilotController {
 	private PilotService pilotService;
 	
 	@RequestMapping("/")
-	private String home() {
+	private String home(Model model) {
+		model.addAttribute("navTitle", "Home Tutorial 5");
 		return "home";
 	}
 	
 	@RequestMapping(value = "/pilot/add", method=RequestMethod.GET)
 	private String add(Model model) {
+		model.addAttribute("navTitle", "Add Pilot");
 		model.addAttribute("pilot", new PilotModel());
 		return "addPilot";
 	}
 	
 	@RequestMapping(value = "/pilot/add", method=RequestMethod.POST)
-	private String addPilotSubmit(@ModelAttribute PilotModel pilot) {
+	private String addPilotSubmit(@ModelAttribute PilotModel pilot, Model model) {
+		model.addAttribute("navTitle", "Add Pilot");
 		pilotService.addPilot(pilot);
 		return "add";
 	}
 	
-	@RequestMapping("/pilot/view")
+	@RequestMapping(value = "/pilot/view", method = RequestMethod.GET)
 	public String view(@RequestParam("licenseNumber") String licenseNumber, Model model) {
+		model.addAttribute("navTitle", "View Pilot");
 		PilotModel pilot = pilotService.getPilotDetailByLicenseNumber(licenseNumber);
 		model.addAttribute("flightList", pilot.getPilotFlight());
 		model.addAttribute("pilot", pilot);
@@ -44,6 +48,7 @@ public class PilotController {
 	
 	@RequestMapping(value = "/pilot/update/{licenseNumber}", method=RequestMethod.GET)
 	private String update(@PathVariable String licenseNumber, Model model) {
+		model.addAttribute("navTitle", "Update Pilot");
 		PilotModel oldPilot = pilotService.getPilotDetailByLicenseNumber(licenseNumber);
 		model.addAttribute("oldPilot", oldPilot);
 		model.addAttribute("newPilot", new PilotModel());
@@ -51,13 +56,15 @@ public class PilotController {
 	}
 	
 	@RequestMapping(value = "/pilot/update/{licenseNumber}", method=RequestMethod.POST)
-	private String updatePilotSubmit(@ModelAttribute PilotModel newPilot, @PathVariable String licenseNumber) {
+	private String updatePilotSubmit(@ModelAttribute PilotModel newPilot, @PathVariable String licenseNumber, Model model) {
+		model.addAttribute("navTitle", "Update Pilot");
 		pilotService.updatePilot(newPilot, licenseNumber);
 		return "update";
 	}
 	
 	@RequestMapping(value = "/pilot/delete/{id}", method=RequestMethod.GET)
-	private String deletePilot(@PathVariable long id) {
+	private String deletePilot(@PathVariable long id, Model model) {
+		model.addAttribute("navTitle", "Delete Pilot");
 		pilotService.deletePilot(id);
 		return "delete";
 	}
